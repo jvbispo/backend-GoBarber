@@ -1,24 +1,28 @@
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
-import { getRepository } from 'typeorm';
-import User from '../models/User';
+import authConfig from '@config/authConfig';
+import { injectable, inject } from 'tsyringe';
+import User from '../infra/typeorm/entities/User';
+import IUserRepository from '../repositories/IUserRepository';
 
-import authConfig from '../config/authConfig';
-
-interface RequestDTO {
+interface IRequestDTO {
   email: string;
   password: string;
 }
 
-interface Response {
+interface IResponse {
   user: User;
   token: string;
 }
-
+@injectable()
 class CreateSessionService {
-  public async execute({ email, password }: RequestDTO): Promise<Response> {
-    const userRepository = getRepository(User);
-    const user = await userRepository.findOne({ where: { email } });
+  constructor(
+    @inject('UserRepository')
+    private userRepository: IUserRepository,
+  ) {}
+
+  public async execute({ email, password }: IRequestDTO): Promise<IResponse> {
+    const user = await this.userRepository.findByEamail(email);
 
     if (!user) {
       throw Error("email/password doesn't match");

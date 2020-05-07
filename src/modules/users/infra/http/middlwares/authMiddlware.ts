@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
-import authConfig from '../config/authConfig';
+import authConfig from '@config/authConfig';
 
-interface Payload {
+interface IPayload {
   iat: number;
   exp: number;
   sub: string;
@@ -24,7 +24,7 @@ export default function authMiddlware(
   try {
     const decoded = verify(token, authConfig.secret);
 
-    const { sub } = decoded as Payload;
+    const { sub } = decoded as IPayload;
 
     req.user = {
       id: sub,

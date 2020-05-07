@@ -19,7 +19,9 @@
   },
   "plugins": ["@typescript-eslint","prettier"],
   "rules": {
+    "no-useless-constructor": "off",
     "prettier/prettier":"error",
+    "@typescript-eslint/interface-name-prefix": ["error", {"prefixWithI": "always"}],
     "@typescript-eslint/camelcase": "off",
     "class-methods-use-this": "off",
     "import/extensions": [
