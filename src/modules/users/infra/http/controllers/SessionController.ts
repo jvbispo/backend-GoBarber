@@ -10,7 +10,7 @@ export default class SessionController {
       const createSession = container.resolve(CreateSessionService);
 
       const { user, token } = await createSession.execute({ email, password });
-      console.log(token);
+
       return res.json({ user, token });
     } catch (err) {
       return res.json({ error: err.mesage });

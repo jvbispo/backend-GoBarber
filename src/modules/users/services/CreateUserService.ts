@@ -1,8 +1,7 @@
-import { hash } from 'bcrypt';
-
 import { inject, injectable } from 'tsyringe';
 import User from '../infra/typeorm/entities/User';
 import IUserRepository from '../repositories/IUserRepository';
+import IHashProvider from '../providers/hashProvider/models/IHashProvider';
 
 interface IRequestDTO {
   name: string;
@@ -14,16 +13,18 @@ class CreateUserService {
   constructor(
     @inject('UserRepository')
     private userRepository: IUserRepository,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({ name, email, password }: IRequestDTO): Promise<User> {
     const userExists = await this.userRepository.findByEamail(email);
 
     if (userExists) {
-      throw Error('email already exists');
+      throw new Error('email already exists');
     }
 
-    const passwordHash = await hash(password, 8);
+    const passwordHash = await this.hashProvider.hash(password);
 
     const user = await this.userRepository.create({
       name,

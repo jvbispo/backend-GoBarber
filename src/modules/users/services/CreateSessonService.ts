@@ -1,9 +1,10 @@
-import { sign } from 'jsonwebtoken';
-import { compare } from 'bcrypt';
-import authConfig from '@config/authConfig';
 import { injectable, inject } from 'tsyringe';
+import { sign } from 'jsonwebtoken';
+import authConfig from '@config/authConfig';
+
 import User from '../infra/typeorm/entities/User';
 import IUserRepository from '../repositories/IUserRepository';
+import IHashProvider from '../providers/hashProvider/models/IHashProvider';
 
 interface IRequestDTO {
   email: string;
@@ -19,20 +20,26 @@ class CreateSessionService {
   constructor(
     @inject('UserRepository')
     private userRepository: IUserRepository,
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute({ email, password }: IRequestDTO): Promise<IResponse> {
     const user = await this.userRepository.findByEamail(email);
 
     if (!user) {
-      throw Error("email/password doesn't match");
+      throw new Error("email/password doesn't match");
     }
 
-    const passwordDecoded = await compare(password, user.password);
-
+    const passwordDecoded = await this.hashProvider.compare(
+      password,
+      user.password,
+    );
+    console.log(passwordDecoded);
     if (!passwordDecoded) {
       throw new Error("email/password doesn't match");
     }
+    console.log('alo');
 
     const token = sign({}, authConfig.secret, {
       subject: user.id,
