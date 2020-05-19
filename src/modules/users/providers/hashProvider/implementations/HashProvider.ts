@@ -12,7 +12,7 @@ class HashProvider implements IHashProvider {
     passwordHash: string,
     password: string,
   ): Promise<boolean> {
-    const isPassword = await compare(passwordHash, password);
+    const isPassword = await compare(password, passwordHash);
 
     return isPassword;
   }

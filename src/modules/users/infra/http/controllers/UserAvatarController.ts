@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { classToClass } from 'class-transformer';
 import UpdateAvatarService from '../../../services/UpdateAvatarService';
 
 export default class SessionController {
@@ -12,11 +13,7 @@ export default class SessionController {
         avatarFileName: req.file.filename,
       });
 
-      delete user.password;
-      delete user.created_at;
-      delete user.updated_at;
-
-      return res.json(user);
+      return res.json(classToClass(user));
     } catch (err) {
       throw new Error(err);
     }

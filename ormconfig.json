@@ -1,7 +1,8 @@
-{
+[{
+  "name": "default",
   "type": "postgres",
   "host": "localhost",
-  "port": "5432",
+  "port": 5432,
   "username": "conexao",
   "password": "root",
   "database":"gobarber",
@@ -14,4 +15,15 @@
   "cli": {
     "migrationsDir": "./src/shared/infra/typeorm/database/migrations"
   }
+},{
+  "type": "mongodb",
+  "name": "mongo",
+  "host": "localhost",
+  "port": 27017,
+  "database":"gobarber",
+  "entities": [
+    "./src/modules/**/infra/typeorm/schemas/*.ts"
+  ],
+    "useUnifiedTopology": true
 }
+]

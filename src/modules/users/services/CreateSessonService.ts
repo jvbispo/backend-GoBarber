@@ -25,21 +25,21 @@ class CreateSessionService {
   ) {}
 
   public async execute({ email, password }: IRequestDTO): Promise<IResponse> {
-    const user = await this.userRepository.findByEamail(email);
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new Error("email/password doesn't match");
     }
 
     const passwordDecoded = await this.hashProvider.compare(
-      password,
       user.password,
+      password,
     );
+
     console.log(passwordDecoded);
     if (!passwordDecoded) {
       throw new Error("email/password doesn't match");
     }
-    console.log('alo');
 
     const token = sign({}, authConfig.secret, {
       subject: user.id,

@@ -11,7 +11,8 @@ class HashProviderFake implements IHashProvider {
     passwordHash: string,
     password: string,
   ): Promise<boolean> {
-    return password === passwordHash;
+    const isEqual = password === passwordHash;
+    return isEqual;
   }
 }
 

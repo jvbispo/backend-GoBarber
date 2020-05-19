@@ -1,24 +1,39 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
-import { parseISO } from 'date-fns';
-import { container } from 'tsyringe';
+import { celebrate, Segments, Joi } from 'celebrate';
 
-import CreateAppointmentService from '@modules/appointments/services/CreateAppointmentService';
 import authMiddlware from '@modules/users/infra/http/middlwares/authMiddlware';
 import AppointmentsController from '../controllers/AppointmentsController';
+import ProviderAppointmentsController from '../controllers/ProviderAppointmentsController';
 
 const appointmentsRouter = Router();
 const appointmentsController = new AppointmentsController();
+const providerAppointmentsController = new ProviderAppointmentsController();
 
 appointmentsRouter.use(authMiddlware);
 
-/* appointmentsRouter.get('/', async (req, res) => {
-  const appointmentsRepository = new AppointmentsRepository();
-
-  const appointments = await appointmentsRepository.find();
-  return res.json(appointments);
-}); */
-
-appointmentsRouter.post('/', appointmentsController.create);
+appointmentsRouter.post(
+  '/',
+  celebrate({
+    [Segments.BODY]: {
+      provider_id: Joi.string().uuid().required(),
+      date: Joi.date().required(),
+    },
+  }),
+  appointmentsController.create,
+);
+appointmentsRouter.get(
+  '/me',
+  celebrate({
+    [Segments.HEADERS]: {
+      provider_id: Joi.string().uuid().required(),
+    },
+    [Segments.BODY]: {
+      year: Joi.number().required(),
+      month: Joi.number().required(),
+      day: Joi.number().required(),
+    },
+  }),
+  providerAppointmentsController.index,
+);
 
 export default appointmentsRouter;
