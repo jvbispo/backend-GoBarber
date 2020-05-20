@@ -2,6 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import { isAfter, addHours } from 'date-fns';
 import IUserRepository from '../repositories/IUserRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
+import IHashProvider from '../providers/hashProvider/models/IHashProvider';
 
 interface IRequest {
   password: string;
@@ -15,6 +16,8 @@ class ResetPasswordService {
     private usersRepository: IUserRepository,
     @inject('UserToken')
     private usersTokenRepository: IUserTokensRepository,
+    @inject('HashProvider')
+    private hashProviver: IHashProvider,
   ) {}
 
   public async execute({ password, token }: IRequest): Promise<void> {
@@ -36,7 +39,7 @@ class ResetPasswordService {
       throw new Error('token expired');
     }
 
-    user.password = password;
+    user.password = await this.hashProviver.hash(password);
 
     await this.usersRepository.save(user);
   }

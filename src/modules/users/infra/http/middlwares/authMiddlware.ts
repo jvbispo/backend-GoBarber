@@ -23,7 +23,6 @@ export default function authMiddlware(
 
   try {
     const decoded = verify(token, authConfig.secret);
-    console.log(decoded);
     const { sub } = decoded as IPayload;
 
     req.user = {

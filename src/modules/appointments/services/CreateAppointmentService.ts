@@ -2,6 +2,7 @@ import { startOfHour, getHours, isAfter, format } from 'date-fns';
 
 import { injectable, inject } from 'tsyringe';
 import INotificationRepository from '@modules/notifications/repositories/INotificationRepository';
+import ICacheProvider from '@shared/providers/cacheProvider/models/ICacheProvider';
 import Appointment from '../infra/typeorm/entities/Appointment';
 import IAppointmentRepository from '../repositories/IAppointmentsReposity';
 
@@ -18,6 +19,8 @@ class CreateAppointmentService {
     private appointmentsRepository: IAppointmentRepository,
     @inject('NotificationRepository')
     private notificationsRepository: INotificationRepository,
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -27,6 +30,7 @@ class CreateAppointmentService {
   }: IRequestDTO): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
     const currentDate = new Date(Date.now());
+    const parsedDate = format(date, 'yyyy-M-d');
 
     if (
       getHours(appointmentDate) < 8 ||
@@ -60,6 +64,9 @@ class CreateAppointmentService {
       content: `novo agendamento para ${formatedDate} `,
     });
 
+    await this.cacheProvider.invalidate(
+      `provider-appointments:${provider_id}:${parsedDate}`,
+    );
     return appointment;
   }
 }

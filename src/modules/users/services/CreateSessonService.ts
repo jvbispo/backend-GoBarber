@@ -36,7 +36,6 @@ class CreateSessionService {
       password,
     );
 
-    console.log(passwordDecoded);
     if (!passwordDecoded) {
       throw new Error("email/password doesn't match");
     }

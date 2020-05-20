@@ -9,16 +9,14 @@ export default class UserController {
       const userService = container.resolve(CreateUserService);
 
       const { name, email, password } = req.body;
-
       const user = await userService.execute({
         name,
         email,
         password,
       });
-
       return res.json(classToClass(user));
     } catch (err) {
-      return res.json({ error: err.mesage });
+      return res.status(400).json({ error: err.message });
     }
   }
 }

@@ -1,5 +1,6 @@
 import { container } from 'tsyringe';
 import './storageProvider/index';
+import './cacheProvider';
 
 import EtherealMailProvider from './mailProvider/implementations/EtherealMailProvider';
 import IMailProvider from './mailProvider/models/IMailProvider';

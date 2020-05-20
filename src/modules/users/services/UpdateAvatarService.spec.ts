@@ -7,7 +7,7 @@ let fakeUserRepository: FakeUsersRepository;
 let fakeStorageProvider: FakeStorageProvider;
 let updateAvatarService: UpdateAvatarService;
 
-describe('UpdateAvatar', async () => {
+describe('UpdateAvatar', () => {
   beforeEach(() => {
     fakeUserRepository = new FakeUsersRepository();
     fakeStorageProvider = new FakeStorageProvider();

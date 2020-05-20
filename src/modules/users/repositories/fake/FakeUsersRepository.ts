@@ -36,7 +36,12 @@ class FakeUsersRepository implements IUserRepository {
   }: ICreateUserDTO): Promise<User> {
     const user = new User();
 
-    Object.assign(user, { id: uuid(), name, email, password });
+    Object.assign(user, {
+      id: uuid(),
+      name,
+      email,
+      password,
+    });
     this.usersRepository.push(user);
     return user;
   }

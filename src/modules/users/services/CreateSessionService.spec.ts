@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import FakeCacheProvider from '@shared/providers/cacheProvider/fakes/FakeCacheProvider';
 import CreateUserService from './CreateUserService';
 import CreateSessionService from './CreateSessonService';
 import HashProvider from '../providers/hashProvider/fakes/HashProviderFake';
@@ -8,14 +9,17 @@ let fakeUserRespository: UserRepository;
 let fakeHashProvider: HashProvider;
 let createUserService: CreateUserService;
 let createSessionService: CreateSessionService;
+let fakeCacheProvider: FakeCacheProvider;
 
 describe('CreateSession', () => {
   beforeEach(() => {
     fakeUserRespository = new UserRepository();
     fakeHashProvider = new HashProvider();
+    fakeCacheProvider = new FakeCacheProvider();
     createUserService = new CreateUserService(
       fakeUserRespository,
       fakeHashProvider,
+      fakeCacheProvider,
     );
     createSessionService = new CreateSessionService(
       fakeUserRespository,
