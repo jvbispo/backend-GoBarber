@@ -12,7 +12,7 @@
   "dependencies": {
     "@types/mongodb": "^3.5.18",
     "@types/redis": "^2.8.21",
-    "aws-sdk": "^2.679.0",
+    "aws-sdk": "^2.814.0",
     "bcrypt": "^4.0.1",
     "celebrate": "^12.1.1",
     "class-transformer": "^0.2.3",
